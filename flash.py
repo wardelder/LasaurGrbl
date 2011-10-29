@@ -43,7 +43,7 @@ PROGRAMMER = "avrisp"    # use this for bootloader
 BITRATE = "115200"
 
 BUILDNAME = "LasaurGrbl"
-OBJECTS  = ["main", "motion_control", "gcode", "spindle_control", "serial", "protocol", "stepper", 
+OBJECTS  = ["main", "motion_control", "gcode", "serial", "protocol", "stepper", 
             "eeprom", "settings", "planner", "nuts_bolts", "limits", "print", "laser_control"]
              
 COMPILE = AVRGCCAPP + " -Wall -Os -DF_CPU=" + CLOCK + " -mmcu=" + DEVICE + " -I. -ffunction-sections"
@@ -59,4 +59,7 @@ os.system('%(objcopy)s -j .text -j .data -O ihex main.elf %(product)s.hex' % {'o
 
 os.system('%(size)s *.hex *.elf *.o' % {'size':AVRSIZEAPP})
 
-os.system('%(dude)s -b %(bps)s -P %(port)s -p %(device)s -C %(dudeconf)s -B 10 -F -U flash:w:%(product)s.hex:i' % {'dude':AVRDUDEAPP, 'bps':BITRATE, 'port':PORT, 'device':DEVICE, 'dudeconf':AVRDUDECONFIG, 'product':BUILDNAME})
+os.system('%(dude)s -c %(programmer)s -b %(bps)s -P %(port)s -p %(device)s -C %(dudeconf)s -B 10 -F -U flash:w:%(product)s.hex:i' % {'dude':AVRDUDEAPP, 'programmer':PROGRAMMER, 'bps':BITRATE, 'port':PORT, 'device':DEVICE, 'dudeconf':AVRDUDECONFIG, 'product':BUILDNAME})
+
+# fuse setting taken over from Makefile for reference
+#os.system('%(dude)s -U hfuse:w:0xd2:m -U lfuse:w:0xff:m' % {'dude':AVRDUDEAPP})
